@@ -74,6 +74,11 @@ for ref_im, ref_im_name in dataloader:
                     int_path_HR / f"{ref_im_name[i]}_{j:0{padding}}.png")
                 toPIL(LR[i].cpu().detach().clamp(0, 1)).save(
                     int_path_LR / f"{ref_im_name[i]}_{j:0{padding}}.png")
+        #out_im = model(ref_im,**kwargs)
+        for j,(HR,LR) in enumerate(model(ref_im,**kwargs)):
+            for i in range(kwargs["batch_size"]):
+                toPIL(HR[i].cpu().detach().clamp(0, 1)).save(
+                    out_path / f"{ref_im_name[i]}.png")
     else:
         #out_im = model(ref_im,**kwargs)
         for j,(HR,LR) in enumerate(model(ref_im,**kwargs)):
