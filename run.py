@@ -81,7 +81,7 @@ for x in range(12000):
                   toPIL(LR[i].cpu().detach().clamp(0, 1)).save(
                       int_path_LR / f"{ref_im_name[i]}_{seed}.png")
           seed=seed+1
-        kwargs["seed"] = seed
+          kwargs["seed"] = seed
       else:
           #out_im = model(ref_im,**kwargs)
           for j,(HR,LR) in enumerate(model(ref_im,**kwargs)):
