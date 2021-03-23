@@ -59,29 +59,31 @@ model = PULSE(cache_dir=kwargs["cache_dir"])
 model = DataParallel(model)
 
 toPIL = torchvision.transforms.ToPILImage()
+seed = 0
 
-for ref_im, ref_im_name in dataloader:
-    if(kwargs["save_intermediate"]):
-        padding = ceil(log10(100))
-        for i in range(kwargs["batch_size"]):
-            int_path_HR = Path(out_path / ref_im_name[i] / "HR")
-            int_path_LR = Path(out_path / ref_im_name[i] / "LR")
-            int_path_HR.mkdir(parents=True, exist_ok=True)
-            int_path_LR.mkdir(parents=True, exist_ok=True)
-        for j,(HR,LR) in enumerate(model(ref_im,**kwargs)):
-            for i in range(kwargs["batch_size"]):
-                toPIL(HR[i].cpu().detach().clamp(0, 1)).save(
-                    int_path_HR / f"{ref_im_name[i]}_{j:0{padding}}.png")
-                toPIL(LR[i].cpu().detach().clamp(0, 1)).save(
-                    int_path_LR / f"{ref_im_name[i]}_{j:0{padding}}.png")
-        #out_im = model(ref_im,**kwargs)
-        for j,(HR,LR) in enumerate(model(ref_im,**kwargs)):
-            for i in range(kwargs["batch_size"]):
-                toPIL(HR[i].cpu().detach().clamp(0, 1)).save(
-                    out_path / f"{ref_im_name[i]}.png")
-    else:
-        #out_im = model(ref_im,**kwargs)
-        for j,(HR,LR) in enumerate(model(ref_im,**kwargs)):
-            for i in range(kwargs["batch_size"]):
-                toPIL(HR[i].cpu().detach().clamp(0, 1)).save(
-                    out_path / f"{ref_im_name[i]}.png")
+
+for x in range(6):
+
+  for ref_im, ref_im_name in dataloader:
+      if(kwargs["save_intermediate"]):
+          padding = ceil(log10(100))
+          
+          
+          for i in range(kwargs["batch_size"]):
+              int_path_HR = Path(out_path / ref_im_name[i] / "HR")
+              int_path_LR = Path(out_path / ref_im_name[i] / "LR")
+              int_path_HR.mkdir(parents=True, exist_ok=True)
+              int_path_LR.mkdir(parents=True, exist_ok=True)
+          for j,(HR,LR) in enumerate(model(ref_im,**kwargs)):
+              for i in range(kwargs["batch_size"]):
+                  toPIL(HR[i].cpu().detach().clamp(0, 1)).save(
+                      int_path_HR / f"{ref_im_name[i]}_{seed}.png")
+                  toPIL(LR[i].cpu().detach().clamp(0, 1)).save(
+                      int_path_LR / f"{ref_im_name[i]}_{seed}.png")
+          seed=seed+1
+      else:
+          #out_im = model(ref_im,**kwargs)
+          for j,(HR,LR) in enumerate(model(ref_im,**kwargs)):
+              for i in range(kwargs["batch_size"]):
+                  toPIL(HR[i].cpu().detach().clamp(0, 1)).save(
+                      out_path / f"{ref_im_name[i]}.png")
