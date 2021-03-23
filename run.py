@@ -62,7 +62,7 @@ toPIL = torchvision.transforms.ToPILImage()
 seed = 0
 
 
-for x in range(6):
+for x in range(12000):
 
   for ref_im, ref_im_name in dataloader:
       if(kwargs["save_intermediate"]):
